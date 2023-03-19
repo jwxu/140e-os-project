@@ -1,0 +1,13 @@
+.vscode/*
+.vscode-ctags
+libpi/*
+libunix/*
+test/*
+
+.DS_STORE
+
+*.o
+*.d
+*.list
+*.elf
+*.bin
