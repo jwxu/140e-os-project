@@ -1,6 +1,7 @@
 #include "rpi.h"
 #include "graphics.h"
 #include "framebuffer.h"
+#include "math.h"
 
 void write_pixel(uint32_t x, uint32_t y, color_t pix) {
     uint8_t *position = framebuf_get_buf_ptr() + (y * framebuf_get_pitch()) + (x * BYTES_PER_PIXEL);
@@ -79,32 +80,32 @@ void draw_circle(int x0, int y0, int r, color_t pix, int fill) {
     }
 }
 
-void draw_char(unsigned char ch, int x, int y, color_t pix) {
+void draw_char(unsigned char ch, int x, int y, color_t pix, color_t bg_pix, int zoom) {
     unsigned char *glyph = (unsigned char *)&font + (ch < FONT_NUMGLYPHS ? ch : 0) * FONT_BPG;
     color_t col = BLACK;
-    for (int i=0; i < FONT_HEIGHT; i++) {
-        for (int j=0; j < FONT_WIDTH; j++) {
-            unsigned char mask = 1 << j;
+    for (int i=0; i < FONT_HEIGHT * zoom; i++) {
+        for (int j=0; j < FONT_WIDTH * zoom; j++) {
+            unsigned char mask = 1 << divide(j, zoom);
             if (*glyph & mask) {
                 col = pix;
             } else {
-                col = BLACK;
+                col = bg_pix;
             }
             write_pixel(x+j, y+i, col);
         }
-        glyph += FONT_BPL;
+        glyph += mod(i, zoom) ? 0 : FONT_BPL;
     }
 }
 
-void draw_string(int x, int y, char *s, color_t pix) {
+void draw_string(int x, int y, char *s, color_t pix, color_t bg_pix, int zoom) {
     while (*s) {
        if (*s == '\r') {
           x = 0;
        } else if(*s == '\n') {
           x = 0; y += FONT_HEIGHT;
        } else {
-	  draw_char(*s, x, y, pix);
-          x += FONT_WIDTH;
+	  draw_char(*s, x, y, pix, bg_pix, zoom);
+          x += FONT_WIDTH * zoom;
        }
        s++;
     }

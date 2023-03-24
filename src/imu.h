@@ -17,6 +17,20 @@ enum {
     CTRL9_XL = 0x18,
     CTRL10_C = 0x19,
 
+    //******** Shake ********
+    TAP_CFG = 0x58,
+    WAKE_UP_SRC = 0x1B,
+    WAKE_UP_DUR = 0x5B,
+    WAKE_UP_THS = 0x5C,
+    MD1_CFG = 0x5E,
+    // WAKE_DUR_VAL = 0b00,
+    // WAKE_THS_VAL = 0b001111, // 15
+
+    //******** Pedometer ********
+
+    STEP_COUNTER_L = 0x4B,
+    STEP_COUNTER_H = 0x4C,
+
     //******** General ********
     // p46
     odr_13hz = 0b0000,
@@ -81,6 +95,16 @@ void minimu9_who(uint8_t addr);
 
 // do a hard reset
 void minimu9_reset(uint8_t addr);
+
+void minimu9_shake_init(uint8_t addr, unsigned dur, unsigned thresh);
+
+int minimu9_detect_shake(uint8_t addr);
+
+void minimu9_ped_init(uint8_t addr);
+
+short ped_read(uint8_t addr);
+
+void ped_reset(uint8_t addr);
 
 
 //********** Accelerometer **********

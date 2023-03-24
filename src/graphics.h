@@ -46,9 +46,9 @@ void draw_rectangle(int x1, int y1, int x2, int y2, color_t pix, int fill);
 
 void draw_circle(int x, int y, int r, color_t pix, int fill);
 
-void draw_char(unsigned char ch, int x, int y, color_t pix);
+void draw_char(unsigned char ch, int x, int y, color_t pix, color_t bg_pix, int zoom);
 
-void draw_string(int x, int y, char *s, color_t pix);
+void draw_string(int x, int y, char *s, color_t pix, color_t bg_pix, int zoom);
 
 enum {
     FONT_WIDTH     = 8,

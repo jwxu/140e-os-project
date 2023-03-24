@@ -1,6 +1,7 @@
 #include "rpi.h"
 #include "i2c.h"
 #include "imu.h"
+#include "bit-support.h"
 #include <limits.h>
 
 // it's easier to bundle these together.
@@ -57,6 +58,55 @@ void minimu9_reset(uint8_t addr) {
     // they don't give a delay; but it's typical you need one.
     delay_ms(100);
 }
+
+void minimu9_ped_init(uint8_t addr) {
+//     uint8_t tap_val = imu_rd(addr, TAP_CFG);
+//     tap_val = bit_set(tap_val, 6);
+    imu_wr(addr, TAP_CFG, 0x40); // 0b1000000
+
+    imu_wr(addr, CTRL10_C, 0x3E); //0b111110
+
+//     uint8_t ctrl_val = imu_rd(addr, CTRL10_C);
+//     ctrl_val = bit_set(CTRL10_C, 2);
+//     imu_wr(addr, TAP_CFG, ctrl_val);
+
+//     ped_reset(addr);
+}
+
+short ped_read(uint8_t addr) {
+    return (imu_rd(addr, STEP_COUNTER_H) << 8) | imu_rd(addr, STEP_COUNTER_L);
+}
+
+void ped_reset(uint8_t addr) {
+    // imu_wr(addr, TAP_CFG, 0x40);
+    imu_wr(addr, CTRL10_C, 0x3E);
+}
+
+// void minimu9_shake_init(uint8_t addr, unsigned dur, unsigned thresh) {
+//     uint8_t md_val = imu_rd(addr, MD1_CFG);
+//     md_val = bit_set(md_val, 5);
+//     imu_wr(addr, MD1_CFG, md_val);
+
+//     uint8_t tap_val = imu_rd(addr, TAP_CFG);
+//     tap_val = bit_set(tap_val, 4);
+//     tap_val = bit_set(tap_val, 7);
+//     imu_wr(addr, TAP_CFG, tap_val);
+
+//     uint8_t dur_val = imu_rd(addr, WAKE_UP_DUR);
+//     dur_val = bits_set(dur_val, 5, 6, dur);
+//     imu_wr(addr, WAKE_UP_DUR, dur_val);
+
+//     uint8_t thresh_val = imu_rd(addr, WAKE_UP_THS);
+//     thresh_val = bits_set(thresh_val, 0, 5, 0b000001);
+//     imu_wr(addr, WAKE_UP_THS, thresh_val);
+// }
+
+// int minimu9_detect_shake(uint8_t addr) {
+//     if (bit_get(imu_rd(addr, WAKE_UP_SRC), 3) == 1) {
+//         return 1;
+//     }
+//     return 0;
+// }
 
 
 //********** Accelerometer **********

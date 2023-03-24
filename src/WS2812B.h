@@ -103,14 +103,11 @@ static inline void pix_flush(unsigned pin) {
 }
 
 // transmit a {0,1} bit to the ws2812b
-void send_bit(unsigned pin, unsigned b);
 static inline void pix_sendbit(unsigned pin, uint8_t b) {
     if (b) {
         t1h(pin);
         t1l(pin);
     } else {
-        // output("LOW");
-        // send_bit(pin, b);
         t0h(pin);
         t0l(pin);
     }
@@ -120,7 +117,6 @@ static inline void pix_sendbit(unsigned pin, uint8_t b) {
 static void pix_sendbyte(unsigned pin, uint8_t b) {
     for (unsigned char mask = 1 << 7; mask != 0 ; mask >>= 1 ) { 
         pix_sendbit(pin, b & mask);
-        // send_bit(pin, b & mask);
     }
 }
 
